@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Traducteur - Ponctys</title>
+    <style>
+        body {
+            font-family: 'Helvetica', sans-serif;
+            background: linear-gradient(135deg, #FDEB71, #F8D800);
+            color: #333;
+            text-align: center;
+            padding: 50px;
+            margin: 0;
+        }
+        h1 {
+            color: #FF6F61;
+            font-size: 3rem;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        p.subtitle {
+            color: #555;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        textarea {
+            width: 80%;
+            height: 150px;
+            margin: 20px 0;
+            padding: 15px;
+            border: 2px solid #FF6F61;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            background-color: #fff;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+            resize: none;
+        }
+        button {
+            padding: 12px 30px;
+            background-color: #FF6F61;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #D95A4D;
+            transform: scale(1.05);
+        }
+        .output {
+            margin-top: 30px;
+            padding: 25px;
+            background-color: #fff;
+            border: 2px solid #FF6F61;
+            border-radius: 12px;
+            width: 80%;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 1.2rem;
+            white-space: pre-wrap;
+            box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.15);
+        }
+        footer {
+            margin-top: 50px;
+            font-size: 0.9rem;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Traducteur - Ponctys</h1>
+    <p class="subtitle">Traduisez votre texte en langage secret basé sur la ponctuation</p>
+
+    <textarea id="inputText" placeholder="Entrez votre texte ici..."></textarea>
+    <br>
+    <button onclick="translateText('toSecret')">Traduire en Ponctys</button>
+    <button onclick="translateText('toNormal')">Traduire en texte normal</button>
+
+    <div class="output" id="outputText">Votre traduction apparaîtra ici...</div>
+
+    <footer>
+        <p>© 2024 - Ponctys - La langue secrète de lololebambis et Nixbor.</p>
+    </footer>
+
+    <script>
+        // Dictionnaire pour l'alphabet secret
+        const secretAlphabet = {
+            'A': '?', 'B': '.', 'C': ',', 'D': ';', 'E': ':', 'F': '!', 'G': '...', 'H': '-', 'I': '_',
+            'J': '/', 'K': '\\', 'L': '(', 'M': ')', 'N': '[', 'O': ']', 'P': '{', 'Q': '}', 'R': "'",
+            'S': '"', 'T': '&', 'U': '%', 'V': '$', 'W': '#', 'X': '@', 'Y': '^', 'Z': '|',
+            'a': '?', 'b': '.', 'c': ',', 'd': ';', 'e': ':', 'f': '!', 'g': '...', 'h': '-', 'i': '_',
+            'j': '/', 'k': '\\', 'l': '(', 'm': ')', 'n': '[', 'o': ']', 'p': '{', 'q': '}', 'r': "'",
+            's': '"', 't': '&', 'u': '%', 'v': '$', 'w': '#', 'x': '@', 'y': '^', 'z': '|'
+        };
+
+        // Inverser le dictionnaire pour la traduction inverse
+        const normalAlphabet = {};
+        for (let key in secretAlphabet) {
+            normalAlphabet[secretAlphabet[key]] = key;
+        }
+
+        // Fonction pour traduire le texte
+        function translateText(direction) {
+            const inputText = document.getElementById('inputText').value;
+            let translatedText = '';
+
+            if (direction === 'toSecret') {
+                // Traduire de texte normal à alphabet secret
+                for (let i = 0; i < inputText.length; i++) {
+                    const letter = inputText[i];
+                    if (secretAlphabet[letter]) {
+                        translatedText += secretAlphabet[letter];
+                    } else {
+                        translatedText += letter;  // Garder les autres caractères (espaces, chiffres, ponctuations)
+                    }
+                }
+            } else if (direction === 'toNormal') {
+                let tempText = '';  // Variable pour stocker les ponctuations
+
+                for (let i = 0; i < inputText.length; i++) {
+                    const char = inputText[i];
+
+                    // Regrouper les ponctuations si c'est "..."
+                    if (char === '.') {
+                        tempText += char;
+                        if (tempText === '...') {
+                            translatedText += normalAlphabet[tempText] || tempText;
+                            tempText = '';
+                        }
+                    } else {
+                        if (tempText) {
+                            translatedText += normalAlphabet[tempText] || tempText;
+                            tempText = '';
+                        }
+                        translatedText += normalAlphabet[char] || char;
+                    }
+                }
+
+                if (tempText) {
+                    translatedText += normalAlphabet[tempText] || tempText;
+                }
+            }
+
+            document.getElementById('outputText').textContent = translatedText;
+        }
+    </script>
+
+</body>
+</html>
